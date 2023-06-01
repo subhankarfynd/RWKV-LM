@@ -22,7 +22,7 @@ logging.basicConfig(format="%(asctime)s - %(levelname)s - %(name)s - %(message)s
 # Step 1: set training data & cfg
 ########################################################################################################
 
-EXPRESS_PILE_MODE = False # True: express mode for fine-tuning a pile model // False: usual training
+EXPRESS_PILE_MODE = True # True: express mode for fine-tuning a pile model // False: usual training
 
 EXPRESS_PILE_MODEL_NAME = 'RWKV-4-Pile-169M-20220807-8023'
 EXPRESS_PILE_MODEL_TYPE = 'RWKV-4-Pile-169M'
@@ -58,7 +58,7 @@ if EXPRESS_PILE_MODE:
 # 2) set RWKV_NUM_GPUS = '8' (or your #GPU), batch_size = single_gpu_batchsz * RWKV_NUM_GPUS,
 #    EPOCH_BEGIN = 1, LOAD_MODEL = True, and it will load 'trained-1.pth' and continue the training from it
 #
-os.environ['RWKV_NUM_GPUS'] = '1' # num of GPUs to use
+os.environ['RWKV_NUM_GPUS'] = '8' # num of GPUs to use
 
 #
 # 'bf16' (fast & stable)
@@ -128,11 +128,11 @@ lr_init = 8e-4
 lr_final = 1e-5
 
 # the mini-epoch is very short and of fixed length (length = ctx_len * epoch_length_fixed tokens)
-n_epoch = 500
+n_epoch = 1
 epoch_length_fixed = (10000 // batch_size) * batch_size # feel free to increase it if you have lots of GPU
 
 # epoch_save_frequency 0 = never, 1 = every mini-epoch, 2 = every two mini-epochs, ...
-epoch_save_frequency = 10
+epoch_save_frequency = 100
 epoch_save_path = 'trained-'
 
 if EXPRESS_PILE_MODE:
@@ -141,7 +141,7 @@ if EXPRESS_PILE_MODE:
     else:
         lr_init = 1e-5
     lr_final = 1e-5
-    n_epoch = 100000
+    n_epoch = 1
 
 ### misc stuffs ########################################################################################
 
